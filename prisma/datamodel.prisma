@@ -1,0 +1,19 @@
+type Event {
+    id: ID! @id
+    createdAt: DateTime! @createdAt
+    title: String!
+    notes: String!
+    startDate: DateTime
+    endDate: DateTime
+    attendees: [User]
+}
+
+type User {
+    id: ID! @id 
+    firstName: String!
+    lastName: String!
+    email: String!
+    telephone: String!
+}
+
+scalar DateTime

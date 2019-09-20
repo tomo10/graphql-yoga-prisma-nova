@@ -1,0 +1,29 @@
+type Query {
+  events: [Event!]
+  users: [User!]
+}
+
+type Mutation {
+    event(title: String!, startDate: DateTime, endDate: DateTime, notes: String!): Event!
+    user(firstName: String!, lastName: String!, email: String!, telephone: String!): User!
+}
+
+type Event {
+    id: ID!
+    title: String!
+    notes: String!
+    startDate: DateTime
+    endDate: DateTime
+    attendees: [User]
+}
+
+type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    telephone: String!
+}
+
+scalar DateTime
+

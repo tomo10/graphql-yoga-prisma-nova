@@ -1,40 +1,57 @@
 const { GraphQLServer } = require('graphql-yoga')
+const { prisma } = require('./generated/prisma-client')
 
-const typeDefs = `
-type Query {
-  info: String!
-  events: [Event!]!
-}
-
-type Event {
-    id: ID!
-    title: String!
-    startDate: Date!
-    endDate: Date!
-    notes: String!
-    attendees: [User!]!
-}
-
-type User {
-    id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-    telephone: String!
-}
-
-scalar Date
-`
 
 const resolvers = {
   Query: {
-    info: () => `This is the API of a Hackernews Clone`
-  }
+    events: (root, args, context, info) => {
+      return context.prisma.events()
+    },
+    users: (root, args, context, info) => {
+      return context.prisma.users()
+    },
+  },
+  Mutation: {
+      event: (root, args, context) => {
+          return context.prisma.createEvent({
+            title: args.title,
+            notes: args.notes,
+            startDate: args.startDate,
+            endDate: args.endDate,
+            attendees: args.attendees
+          })
+      },
+      user: (root, args, context) => {
+        return context.prisma.createUser({
+          firstName: args.firstName,
+          lastName: args.lastName,
+          email: args.email,
+          telephone: args.telephone
+        })
+      }
+  },
 }
 
 
 const server = new GraphQLServer({
-  typeDefs,
+  typeDefs: './src/schema.graphql',
   resolvers,
+  context: {prisma}
 })
 server.start(() => console.log(`Server is running on http://localhost:4000`))
+
+
+// Event: {
+//   id: (parent) => parent.id,
+//   title: (parent) => parent.title,
+//   notes: (parent) => parent.notes,
+//   startDate: (parent) => parent.startDate,
+//   endDate: (parent) => parent.endDate
+// },
+// User: {
+//   id: (parent) => parent.id,
+//   firstName: (parent) => parent.firstName,
+//   lastName: (parent) => parent.lastName,
+//   email: (parent) => parent.email,
+//   telephone: (parent) => parent.telephone
+// },
