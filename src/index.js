@@ -5,6 +5,8 @@ const { prisma } = require('./generated/prisma-client')
 const resolvers = {
   Query: {
     events: (root, args, context, info) => {
+      console.log('-------------RESOLVER----------')
+      console.log(args)
       return context.prisma.events()
     },
     users: (root, args, context, info) => {
